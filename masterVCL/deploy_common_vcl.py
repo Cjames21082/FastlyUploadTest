@@ -8,7 +8,7 @@ def deploy_common_vcl(self, service_id, version_from, version_to, master_vcl, de
     # upload common VCL files across all services
     # This includes master_vcl, device_detect
 
-    headers = {'Fastly-Key': 'cbfd61cfacb6136b3d1670c196205edd',
+    headers = {'Fastly-Key': 'Key',
                 'Accept': 'application/json',
                 'Content-Type': 'application/x-www-form-urlencoded'}
 
