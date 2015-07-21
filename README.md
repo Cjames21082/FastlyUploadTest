@@ -2,7 +2,7 @@
 
 Python Files:
 
-* Shortcuts:
+* Config:
   * Common files and expressions that can be removed from the individual python scripts
 
 * Activate
@@ -20,6 +20,7 @@ Python Files:
   Note: More common files can be added (i.e Caching Rules)
 
   The script can be tested on my account: cassandra Fastly-Test, service: Videos
+  The Fastly Key will need to be updated
 
 
 
