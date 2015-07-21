@@ -1,4 +1,4 @@
-from shortcuts import *
+from config import *
 
 def get_version(service_id):
     # common pattern
@@ -42,9 +42,12 @@ def upload_file(service_id, version, input_file):
       url = fastly_api + service_version + "/" + version + "/vcl"
       r = requests.post(url, data=vcl_data, headers=headers)
 
+      print r.url
       if "Duplicate" in r.text:
         url = fastly_api + service_version + "/" + version + "/vcl/" + input_file
         r = requests.put(url, data=vcl_data, headers=headers)
+
+        print r.url
 
 
       print  input_file + " Uploaded:\n\n" + r.text
@@ -133,7 +136,6 @@ def deploy_vcl(self, service_id):
 
     print " Version Status:\n\n" + r.text
     print "==========================="
-
 
 
 

@@ -1,4 +1,4 @@
-from shortcuts import *
+from config import *
 
 
 def activate(self, service_id):

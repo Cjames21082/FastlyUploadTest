@@ -1,6 +1,6 @@
 # mylifetime_main.vcl
 include "device_detect";
-include "redirect";
+include "www.mylifetime_redirect";
 
 sub vcl_recv {
 #FASTLY recv
