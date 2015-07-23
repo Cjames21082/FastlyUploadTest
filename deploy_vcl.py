@@ -33,7 +33,8 @@ def upload_file(service_id, version, input_file):
       vcl_file = open(input_file)
       if input_file == "master":
          vcl_data = {'content': vcl_file.read(),
-                     'name': input_file}
+                     'name': input_file,
+                      'main': 'true'}
       else:
          vcl_data = {'content': vcl_file.read(),
                      'main': 'false',
@@ -101,18 +102,9 @@ def deploy_vcl(self, service_id):
 
     if continue_master.lower() == "y":
     # set master vcl
-      url = fastly_api + service_version + "/" + version + "/vcl/master/main"
-      r = requests.put(url, headers=headers)
-
-      print r.url
-      print r.text
-      # upload data for master vcl
       input_file = "master"
       upload_file(service_id, version, input_file)
 
-
-      print " Master File Uploaded:\n\n" + r.text
-      print "==========================="
 
 
     # upload VCL files specific to services

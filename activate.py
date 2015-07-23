@@ -29,8 +29,9 @@ def activate(self, service_id):
 
   if activate_version.lower() == "y":
      url = fastly_api + service_version + "/" + version + "/activate"
-     r = requests.get(url, headers=headers)
+     r = requests.put(url, headers=headers)
 
+     print r.url
      print " Version " + version + " Activated:\n" + r.text
   else:
   	print "Goodbye"
