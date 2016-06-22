@@ -1,4 +1,12 @@
-from config import *
+from config_cass import *
+#from config import *
+import sys
+import glob
+import errno
+import os
+
+path = '/Users/cassandra/FastlyUploadTest/vcl/*.vcl'
+
 
 def get_version(service_id):
     # common pattern
@@ -26,33 +34,46 @@ def get_version(service_id):
 
 
 
-def upload_file(service_id, version, input_file):
+def upload_file(service_id, version):
       # common pattern
       service_version = "service/" + str(service_id) + "/version"
 
-      vcl_file = open(input_file)
-      if input_file == "master":
-         vcl_data = {'content': vcl_file.read(),
-                     'name': input_file,
-                      'main': 'true'}
-      else:
-         vcl_data = {'content': vcl_file.read(),
-                     'main': 'false',
-                     'name': input_file}
+      directory = glob.glob(path)
+      for vcl_file in directory:
+          try:
+            base = os.path.basename(vcl_file)
+            with open(vcl_file) as name:
+              #print base
+              if base == "master.vcl":
+                 vcl_data = {'content': name.read(),
+                             'name': base,
+                             'main': 'true'}
+              else:
+                 vcl_data = {'content': name.read(),
+                             'main': 'false',
+                             'name': base}
 
-      url = fastly_api + service_version + "/" + version + "/vcl"
-      r = requests.post(url, data=vcl_data, headers=headers)
+              url = fastly_api + service_version + "/" + version + "/vcl"
+              r = requests.post(url, data=vcl_data, headers=headers)
 
-      print r.url
-      if "Duplicate" in r.text:
-        url = fastly_api + service_version + "/" + version + "/vcl/" + input_file
-        r = requests.put(url, data=vcl_data, headers=headers)
+              print r.url
+              if "Duplicate" in r.text:
+                url = fastly_api + service_version + "/" + version + "/vcl/" + base
+                #use put instead of post to update the file
+                r = requests.put(url, data=vcl_data, headers=headers)
 
-        print r.url
+                print r.url
 
 
-      print  input_file + " Uploaded:\n\n" + r.text
-      print "==========================="
+              print "Uploaded:\n\n" + r.text
+              print "==========================="
+
+          except IOError as exc:
+            if exc.errno != errno.EISDIR:
+            # Do not fail if a directory is found, just ignore it.
+                raise
+                # Propagate other kinds of IOError.
+
 
 
 
@@ -87,37 +108,7 @@ def deploy_vcl(self, service_id):
 
     print "Working Version is: " + version
 
-    # Determine if device_detect needs to be updated/uploaded
-    device_detect = raw_input("Upload device_detect file? (Y/N) ")
-
-    # upload file for device_detect.vcl
-    if device_detect.lower() == "y":
-      input_file = "device_detect"
-      upload_file(service_id, version, input_file)
-
-
-    # determine if master.vcl needs to be updated/uploaded
-    continue_master = raw_input("Continue with Master VCL upload?(Y/N) ")
-
-
-    if continue_master.lower() == "y":
-    # set master vcl
-      input_file = "master"
-      upload_file(service_id, version, input_file)
-
-
-
-    # upload VCL files specific to services
-    continue_service_upload = raw_input("Upload another service file?(Y/N) ")
-
-
-    while continue_service_upload.lower() == "y":
-
-     # upload file for service
-     input_file = raw_input("Enter file name: ")
-     upload_file(service_id, version, input_file)
-
-     continue_service_upload = raw_input("Upload another service file?(Y/N) ")
+    upload_file(service_id, version)
 
     print " Done loading files. Checking Verison Status:\n\n"
     print "==========================="

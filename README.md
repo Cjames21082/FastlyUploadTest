@@ -17,10 +17,7 @@ Python Files:
     * Lastly, the user upload service specific files. the files name is an input variable within the script and call accordingly
     * The final call check version status for errors
 
-  Note: More common files can be added (i.e Caching Rules)
 
-  The script can be tested on my account: cassandra Fastly-Test, service: Videos
-  The Fastly Key will need to be updated
 
 
 

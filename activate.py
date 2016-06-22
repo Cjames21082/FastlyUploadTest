@@ -1,4 +1,4 @@
-from config import *
+from config_cass import *
 
 
 def activate(self, service_id):
